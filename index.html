@@ -2,7 +2,10 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<script>document.documentElement.classList.add("js")</script>
 <title>Veluna - Free, Open-Source and Ad-Free Music Player</title>
 <meta name="description" content="Veluna is the ultimate free, open-source, ad-free desktop music streaming app for Windows, macOS and Linux. Stream millions of tracks powered by YouTube, enjoy high-fidelity audio, synced lyrics, and offline downloads with zero paywalls or tracking.">
 <meta name="keywords" content="music player, free music player, ad-free music, spotify alternative, free spotify alternative, ad free spotify alternative, apple music alternative, youtube music alternative, tidal alternative, youtube music desktop, youtube music client, desktop youtube music, stream youtube music, free music streaming, open source music player, high fidelity music, lossless audio, mp3 player, music downloader, youtube music downloader, mp3 downloader, offline music downloader, synchronized lyrics, lrc lyrics, audio equalizer, discord rich presence music, mpris music player, crossfade music player, spotify playlist import, exportify csv import, privacy music player, zero tracking music, tauri music player, veluna, veluna player, veluna music, desktop music streamer, windows music player, linux music player, mac music player, macos music player">
@@ -59,10 +62,10 @@
 <link rel="icon" type="image/png" href="veluna_icon.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
 <link rel="shortcut icon" href="favicon.ico?v=2">
-<link rel="preload" as="image" href="screenshots/ss2.png">
+<link rel="preload" as="image" href="screenshots/ss1.png" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:          #000000;
@@ -71,8 +74,8 @@
   --bg4:         #17171d;
   --fg:          #f4f4f6;
   --fg2:         #a1a1aa;
-  --fg3:         #71717a;
-  --fg4:         #47474f;
+  --fg3:         #8b8b95;
+  --fg4:         #6b6b75;
   --bdr:         rgba(255, 255, 255, 0.08);
   --bdr2:        rgba(255, 255, 255, 0.13);
   --bdr3:        rgba(255, 255, 255, 0.22);
@@ -80,7 +83,7 @@
   --max:         1160px;
   --serif:       'Fraunces', serif;
   --sans:        'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --mono:        'Geist', -apple-system, BlinkMacSystemFont, monospace;
+  --mono:        ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --r-sm:        6px;
   --r:           10px;
   --r-lg:        16px;
@@ -91,7 +94,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; background-color: var(--bg); }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); font-size: 16px; background-color: var(--bg); -webkit-text-size-adjust: 100%; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
 body {
@@ -104,16 +107,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Subtle noise texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.5;
-}
 
 a { color: inherit; text-decoration: none; }
 button { font-family: var(--sans); cursor: pointer; border: none; background: none; }
@@ -195,6 +188,23 @@ nav.scrolled {
 .nav-link.active::after {
   content: ''; position: absolute; left: 16px; right: 16px; bottom: 2px;
   height: 2px; background: var(--accent); border-radius: 1px;
+}
+
+/* Wave underline sweep on nav link hover */
+.nav-link::before {
+  content: '';
+  position: absolute; left: 12px; right: 12px; bottom: 2px; height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 50'%3E%3Cpath fill='none' stroke='%23f59e0b' stroke-width='3' d='M0,47.585c0,0,97.5,0,130,0c13.75,0,28.74-38.778,46.168-19.416C192.669,46.5,243.603,47.585,260,47.585c31.821,0,130,0,130,0'/%3E%3C/svg%3E") repeat-x 0 0 / 156px 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .nav-link:not(.active):hover::before { opacity: 1; animation: nav-wave 0.9s ease; }
+}
+.nav-link:not(.active):focus-visible::before { opacity: 1; }
+@keyframes nav-wave {
+  0%   { background-position-x: 156px; }
+  100% { background-position-x: 0; }
 }
 
 .nav-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
@@ -279,11 +289,11 @@ nav.scrolled {
   backdrop-filter: blur(24px);
   border-left: 1px solid var(--bdr);
   padding: 24px 20px; gap: 6px; z-index: 1099;
-  transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(100%); visibility: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0.3s;
   overflow-y: auto;
 }
-.mobile-nav.open { transform: translateX(0); }
+.mobile-nav.open { transform: translateX(0); visibility: visible; transition-delay: 0s; }
 .mobile-nav-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 24px; padding-bottom: 16px;
@@ -319,13 +329,13 @@ nav.scrolled {
 ------------------------------------------------------------- */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding-top: calc(var(--nav-h) + 64px);
-  padding-bottom: 100px;
+  padding-bottom: 72px;
   overflow: hidden;
   background: transparent;
   z-index: 2;
@@ -353,7 +363,7 @@ nav.scrolled {
   width: min(960px, 95vw);
   height: 540px;
   background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.36) 0%, rgba(217, 119, 6, 0.18) 40%, rgba(245, 158, 11, 0.05) 65%, transparent 80%);
-  filter: blur(65px);
+  filter: blur(48px);
   transform: translate(-50%, -50%);
   animation: orb-drift-1 7s ease-in-out infinite alternate;
 }
@@ -364,7 +374,7 @@ nav.scrolled {
   width: min(760px, 82vw);
   height: 460px;
   background: radial-gradient(ellipse at center, rgba(251, 191, 36, 0.28) 0%, rgba(245, 158, 11, 0.12) 45%, transparent 70%);
-  filter: blur(75px);
+  filter: blur(48px);
   transform: translate(-50%, -50%);
   animation: orb-drift-2 9s ease-in-out infinite alternate;
 }
@@ -375,7 +385,7 @@ nav.scrolled {
   width: min(1200px, 98vw);
   height: 560px;
   background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.38) 0%, rgba(217, 119, 6, 0.2) 45%, transparent 75%);
-  filter: blur(70px);
+  filter: blur(48px);
   transform: translate(-50%, -50%);
   animation: orb-drift-3 6s ease-in-out infinite alternate;
 }
@@ -471,9 +481,9 @@ nav.scrolled {
 
 .hero-title {
   font-family: var(--serif);
-  font-size: clamp(62px, 9.8vw, 122px);
+  font-size: clamp(44px, 7.6vw, 92px);
   font-weight: 300;
-  line-height: 0.94;
+  line-height: 1;
   letter-spacing: -0.035em;
   color: var(--fg);
   margin-bottom: 30px;
@@ -549,7 +559,7 @@ nav.scrolled {
 }
 
 .blob-btn::before {
-  content: ;
+  content: '';
   z-index: 1;
   position: absolute;
   left: 0;
@@ -563,7 +573,7 @@ nav.scrolled {
 }
 
 .blob-btn::after {
-  content: ;
+  content: '';
   z-index: -2;
   position: absolute;
   left: 3px;
@@ -689,6 +699,7 @@ nav.scrolled {
 
 /* Animated sweeping horizon beam */
 .horizon-beam {
+  display: none;
   position: absolute;
   top: 110px;
   left: 50%;
@@ -732,7 +743,6 @@ nav.scrolled {
   box-shadow: 0 -25px 90px rgba(245, 158, 11, 0.3), 0 -10px 40px rgba(251, 191, 36, 0.18), inset 0 2px 35px rgba(255, 255, 255, 0.2);
   pointer-events: none;
   z-index: 1;
-  animation: horizon-breathe 8s ease-in-out infinite alternate;
 }
 
 @keyframes horizon-breathe {
@@ -762,10 +772,8 @@ nav.scrolled {
   overflow: hidden;
   box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.98), 0 0 50px rgba(255, 255, 255, 0.04);
   transition: box-shadow 0.3s ease;
-  animation: mockup-float 8s ease-in-out infinite;
 }
 .mockup-window:hover {
-  animation-play-state: paused;
   box-shadow: 0 45px 120px -20px rgba(0, 0, 0, 1), 0 0 70px rgba(245, 158, 11, 0.08);
 }
 
@@ -802,7 +810,7 @@ nav.scrolled {
 .mockup-dot.green { background: #27c93f; }
 
 .mockup-title {
-  position: absolute;
+  position: absolute; max-width: 60%; overflow: hidden; text-overflow: ellipsis;
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
@@ -906,8 +914,8 @@ nav.scrolled {
 .divider { border: none; border-top: 1px solid var(--bdr); margin: 0; }
 
 .s-label {
-  font-size: 12px; font-weight: 600;
-  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+  font-size: 14px; font-weight: 600;
+  letter-spacing: 0.01em; color: var(--accent);
   display: block; margin-bottom: 14px;
 }
 .s-head {
@@ -922,16 +930,16 @@ nav.scrolled {
 }
 
 /* Scroll reveal animations */
-.reveal {
+.js .reveal {
   opacity: 0; transform: translateY(24px);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.reveal.d1 { transition-delay: 0.08s; }
-.reveal.d2 { transition-delay: 0.16s; }
-.reveal.d3 { transition-delay: 0.24s; }
-.reveal.d4 { transition-delay: 0.32s; }
-.reveal.visible { opacity: 1; transform: none; }
+.js .reveal.d1 { transition-delay: 0.08s; }
+.js .reveal.d2 { transition-delay: 0.16s; }
+.js .reveal.d3 { transition-delay: 0.24s; }
+.js .reveal.d4 { transition-delay: 0.32s; }
+.js .reveal.visible { opacity: 1; transform: none; }
 
 /* -------------------------------------------------------------
    FEATURES SECTION
@@ -1211,6 +1219,26 @@ footer {
 #back-top:hover { color: var(--fg); border-color: var(--bdr3); }
 #back-top svg { width: 16px; height: 16px; }
 
+/* FAQ */
+.faq-list { max-width: 780px; margin-top: 44px; border-top: 1px solid var(--bdr); }
+.faq-list details { border-bottom: 1px solid var(--bdr); }
+.faq-list summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 20px;
+  align-items: center; padding: 22px 4px; font-size: 17px; font-weight: 500; letter-spacing: -0.01em;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: '+'; font-size: 22px; color: var(--fg3); transition: transform 0.2s ease; flex-shrink: 0; }
+.faq-list details[open] summary::after { transform: rotate(45deg); color: var(--accent); }
+.faq-list details.closing summary::after { transform: none; color: var(--fg3); }
+.faq-list p { padding: 0 4px 24px; color: var(--fg2); font-size: 15px; line-height: 1.75; max-width: 680px; }
+.faq-list a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.faq-list code { background: var(--bg4); border: 1px solid var(--bdr); border-radius: 4px; padding: 2px 6px; font-size: 12px; word-break: break-all; }
+.mobile-note { display: none; margin-top: 28px; padding: 14px 18px; border: 1px solid var(--bdr2); border-radius: var(--r); background: var(--bg2); color: var(--fg2); font-size: 14px; }
+.mobile-note.show { display: block; }
+.dl-card-desc code { word-break: break-all; }
+#back-top { bottom: max(24px, env(safe-area-inset-bottom)); }
+@media (hover: none) { .feat-card:hover, .dl-card:hover, .comm-card:hover { transform: none; } }
+
 /* -------------------------------------------------------------
    RESPONSIVE STYLES
 ------------------------------------------------------------- */
@@ -1240,6 +1268,14 @@ footer {
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { justify-content: center; text-align: center; }
   .horizon-arc { width: 220%; height: 280px; top: 110px; }
+  .glow-orb { animation: none; filter: blur(36px); }
+  .glow-orb-2 { display: none; }
+  .hero-stage { padding: 0 8px; margin-top: 40px; }
+  .mockup-header { height: 32px; }
+  .feat-card { padding: 26px 22px; }
+  .dl-card, .comm-card { padding: 26px 22px; }
+  .faq-list summary { font-size: 16px; }
+  .section { padding-top: 72px; padding-bottom: 72px; }
 }
 </style>
 </head>
@@ -1269,6 +1305,7 @@ footer {
     <div class="nav-links">
       <a href="#features" class="nav-link">Features</a>
       <a href="#download" class="nav-link">Download</a>
+      <a href="#faq" class="nav-link">FAQ</a>
       <a href="#community" class="nav-link">Community</a>
     </div>
 
@@ -1294,7 +1331,7 @@ footer {
           </span>
         </span>
       </a>
-      <button class="ham" id="ham" aria-label="Toggle menu">
+      <button class="ham" id="ham" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -1312,6 +1349,7 @@ footer {
   </div>
   <a href="#features" onclick="closeMobile()">Features</a>
   <a href="#download" onclick="closeMobile()">Download</a>
+  <a href="#faq" onclick="closeMobile()">FAQ</a>
   <a href="#community" onclick="closeMobile()">Community</a>
   <a href="https://github.com/velunahq/veluna" target="_blank" rel="noopener">GitHub</a>
   <a href="https://discord.gg/u7QXUgPcqr" target="_blank" rel="noopener">Discord</a>
@@ -1328,7 +1366,7 @@ footer {
 
   <div class="hero-content">
     <h1 class="hero-title reveal d1">
-      your<br><em>music</em><br><strong>deserves better.</strong>
+      Your <em>music</em><br><strong>deserves better.</strong>
     </h1>
 
     <p class="hero-desc reveal d2">
@@ -1376,7 +1414,7 @@ footer {
           <span class="mockup-dot yellow"></span>
           <span class="mockup-dot green"></span>
         </div>
-        <div class="mockup-title">Veluna</div>
+        <div class="mockup-title" id="mockup-title">Veluna · Home</div>
       </div>
       <div class="mockup-viewport">
         <div class="mockup-track" id="mockup-track">
@@ -1469,7 +1507,7 @@ footer {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 17 21 12 16 7"/><polyline points="8 7 3 12 8 17"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="3" y1="12" x2="15" y2="12"/></svg>
         </div>
         <div class="feat-title">Playlist Import and Export</div>
-        <div class="feat-desc">Effortlessly migrate your library: import Spotify playlists via Exportify CSV or paste any public YouTube playlist URL for automated track matching.</div>
+        <div class="feat-desc">Effortlessly migrate your library: import Spotify playlists by pasting a public playlist link or an Exportify CSV, or paste any public YouTube playlist URL for automated track matching.</div>
       </div>
 
       <!-- Feature 8: Listening Stats and Scrobbling -->
@@ -1509,7 +1547,9 @@ footer {
       </div>
     </div>
 
-    <div class="dl-grid">
+    <p class="mobile-note" id="mobile-note">Veluna is a desktop app. Open this page on your computer to download it.</p>
+
+    <div class="dl-grid" id="dl-grid">
       <!-- Linux Card -->
       <div class="dl-card" id="card-linux">
         <div class="dl-card-header">
@@ -1573,6 +1613,24 @@ footer {
           Supports auto-update. Unsigned community build: first launch requires one Terminal command: <code>xattr -dr com.apple.quarantine /Applications/veluna.app</code>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FAQ SECTION -->
+<section id="faq" class="section">
+  <div class="section-inner">
+    <span class="s-label reveal">FAQ</span>
+    <h2 class="s-head reveal d1">Common questions</h2>
+    <div class="faq-list reveal d2">
+      <details><summary>Is Veluna really free?</summary><p>Yes. Veluna is open source under the GNU GPL-3.0 license, with no ads, no subscriptions and no paywalls.</p></details>
+      <details><summary>Does Veluna collect any data?</summary><p>No. There are no analytics, cookies or telemetry. Your playlists, history and listening stats stay on your device in an encrypted local database.</p></details>
+      <details><summary>Can I move my Spotify playlists over?</summary><p>Yes. Paste the link of any public Spotify playlist and Veluna imports the songs, or export it as CSV with Exportify and import that file instead.</p></details>
+      <details><summary>Why does Windows say Veluna is unsafe?</summary><p>Windows SmartScreen warns about apps that are new or not widely downloaded yet, and Veluna is a small free project. It is not malware: all the source code is public on GitHub, so anyone can read it or build it themselves. Read the full explanation and the steps to open it in <a href="https://github.com/velunahq/veluna/wiki/Why-does-Windows-flag-Veluna-as-unsafe%3F" target="_blank" rel="noopener">this wiki page</a>.</p></details>
+      <details><summary>Why does macOS block the first launch?</summary><p>The macOS build is an unsigned community build. Run <code>xattr -dr com.apple.quarantine /Applications/veluna.app</code> in Terminal once, then open the app normally.</p></details>
+      <details><summary>Does it run on Intel Macs and older Linux distros?</summary><p>Prebuilt macOS releases target Apple Silicon, so Intel Macs need to build from source. Linux builds need glibc 2.39 or newer (Ubuntu 24.04+, Debian 13+, Fedora 40+).</p></details>
     </div>
   </div>
 </section>
@@ -1649,6 +1707,7 @@ footer {
         <a href="https://github.com/velunahq/veluna" target="_blank" rel="noopener">Source Code</a>
         <a href="https://github.com/velunahq/veluna/issues" target="_blank" rel="noopener">Report an Issue</a>
         <a href="https://github.com/velunahq/veluna/wiki" target="_blank" rel="noopener">Documentation</a>
+        <a href="#faq">FAQ</a>
         <a href="#community">Community</a>
       </div>
 
@@ -1699,7 +1758,7 @@ footer {
   revealEls.forEach(function(el) { io.observe(el); });
 
   // Nav links active state scrollspy
-  var sections = ['features', 'download', 'community'];
+  var sections = ['features', 'download', 'faq', 'community'];
   var navLinks = {};
   sections.forEach(function(id) {
     var el = document.querySelector('.nav-links a[href="#' + id + '"]');
@@ -1721,10 +1780,13 @@ footer {
   var mobileNav = document.getElementById('mobile-nav');
   document.getElementById('ham').addEventListener('click', function() {
     var isOpen = mobileNav.classList.toggle('open');
+    this.setAttribute('aria-expanded', isOpen);
     document.getElementById('mobile-overlay').classList.toggle('open', isOpen);
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMobile(); });
   window.closeMobile = function() {
+    document.getElementById('ham').setAttribute('aria-expanded', 'false');
     mobileNav.classList.remove('open');
     document.getElementById('mobile-overlay').classList.remove('open');
     document.body.style.overflow = '';
@@ -1741,16 +1803,18 @@ footer {
 
   // Client OS detection for download recommendation
   var ua = navigator.userAgent || '';
-  var isMac = /Macintosh|MacIntel|MacPPC|Mac68K/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var isWin = /Win32|Win64|Windows|WinCE/i.test(ua);
-  var isLinux = /Linux/i.test(ua) && !/Android/i.test(ua);
+  var isMobile = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isMac = !isMobile && /Macintosh|MacIntel|MacPPC|Mac68K/i.test(ua);
+  if (isMobile) document.getElementById('mobile-note').classList.add('show');
+  var isWin = !isMobile && /Win32|Win64|Windows|WinCE/i.test(ua);
+  var isLinux = !isMobile && /Linux/i.test(ua);
 
   var targetId = isLinux ? 'card-linux' : (isWin ? 'card-windows' : (isMac ? 'card-macos' : null));
   var badgeId = isLinux ? 'badge-linux' : (isWin ? 'badge-windows' : (isMac ? 'badge-macos' : null));
 
   if (targetId) {
     var card = document.getElementById(targetId);
-    if (card) card.classList.add('is-active-os');
+    if (card) { card.classList.add('is-active-os'); var g = document.getElementById('dl-grid'); if (g && g.firstElementChild !== card) g.insertBefore(card, g.firstElementChild); }
     var badge = document.getElementById(badgeId);
     if (badge) badge.style.display = 'inline-block';
   }
@@ -1779,6 +1843,8 @@ footer {
     .then(function(rel) {
       if (!rel || !rel.assets) return;
       var tag = rel.tag_name || 'v0.1.7';
+      var cl = document.querySelector('.footer-col a[href*="/releases/tag/"]');
+      if (cl && rel.html_url) cl.href = rel.html_url;
       var chip = document.getElementById('latest-version-chip');
       if (chip) {
         chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;color:var(--accent)"><polyline points="20 6 9 17 4 12"/></svg> ' + tag + ' - Latest Release';
@@ -1812,6 +1878,36 @@ footer {
       });
     })
     .catch(function() {});
+
+  // Smooth FAQ open/close
+  (function initFaq() {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    document.querySelectorAll('.faq-list details').forEach(function(d) {
+      var sum = d.querySelector('summary');
+      var body = d.querySelector('p');
+      var anim = null;
+      function done() { d.style.height = ''; d.style.overflow = ''; d.classList.remove('closing'); anim = null; }
+      sum.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (reduce.matches || !d.animate) { d.open = !d.open; return; }
+        if (anim) anim.finish();
+        var start = d.offsetHeight;
+        d.style.overflow = 'hidden';
+        if (d.open) {
+          d.classList.add('closing');
+          anim = d.animate({ height: [start + 'px', sum.offsetHeight + 'px'] }, { duration: 320, easing: ease });
+          anim.onfinish = function() { d.open = false; done(); };
+        } else {
+          d.open = true;
+          var end = d.offsetHeight;
+          anim = d.animate({ height: [start + 'px', end + 'px'] }, { duration: 380, easing: ease });
+          body.animate({ opacity: [0, 1], transform: ['translateY(-6px)', 'none'] }, { duration: 380, easing: ease });
+          anim.onfinish = done;
+        }
+      });
+    });
+  })();
 
   // Mockup Screenshot Switcher (ss1 / ss2)
   (function initMockupSwitcher() {
